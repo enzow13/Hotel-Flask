@@ -7,13 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/form.css') }}">
 </head>
 <body>
     <main id="main-content_page">
         <div>
-            <h1>Registro de Hotel</h1>
+            <h1>Registro de Contas</h1>
             <section id="section-content_form">
                 <form id="main-form" action="{{ url_for('registroPage') }}" method="post">
                     <label for="name">Nome:</label>
@@ -24,7 +24,7 @@
                     <input class="input-form" type="email" name="email" placeholder="Digite seu e-mail">
                     <label for="password">Senha:</label>
                     <input class="input-form" type="password" name="password" placeholder="Digite sua senha">
-                    <input id="input-btn_submit" type="submit" value="REGISTRAR">
+                    <input id="input-btn_submit" type="submit" value="REGISTRAR-SE">
                 </form>
             </section>
         </div>

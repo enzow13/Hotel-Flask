@@ -1,3 +1,3 @@
 tasks:
-  - command: pip install flask
+  - init: pip install flask
   - command: python app.py
