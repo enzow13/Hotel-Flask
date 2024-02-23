@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 import sqlite3
 
 # Flask server
@@ -30,5 +30,10 @@ def registroPage(name_=False, lname_=False, email_=False, pass_=False):
     except:
         return f"/***# {request.method} ERROR EXCEPTION ---"
     return render_template("registration.html", name=name_, lname=lname_, email=email_, password=pass_)
+
+@app.route("/returnSQL")
+def funcao():
+    result = {"message": "Python function executed successfully!"}
+    return jsonify(result)
 
 app.run(debug=True)
