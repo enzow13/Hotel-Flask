@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request, url_for, jsonify
+from random import randint
 import sqlite3
+
+# SQL server
+db = "database.db"
 
 # Flask server
 app = Flask(__name__)
@@ -9,27 +13,36 @@ def mainPage():
     return render_template("page.html")
 
 @app.route("/registration", methods=["GET", "POST"])
-def registroPage(name_=False, lname_=False, email_=False, pass_=False):
+def registroPage(id_=False, name_=False, lname_=False, email_=False, pass_=False):
+    def getRequestFormToSQL(form_name):
+        return request.form[form_name]
     try:
+        conn = sqlite3.connect(db)
+        cursor = conn.cursor()
+        cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro (id, nome, sobrenome, email, senha)""")
         if (request.method == "POST"):
-            name_ = request.form["name"]
-            lname_ = request.form["lastname"]
-            email_ = request.form["email"]
-            pass_ = request.form["password"]
+            while True:
+                user_id = str(randint(0, 999))
+                cursor.execute("""SELECT id FROM cadastro WHERE id=?""", (user_id,))
+                check_id = cursor.fetchone()
+                if check_id is None:
+                    id_ = user_id
+                    break
+            name_ = getRequestFormToSQL("name")
+            lname_ = getRequestFormToSQL("lastname")
+            email_ = getRequestFormToSQL("email")
+            pass_ = getRequestFormToSQL("password") 
             try:
-                conn = sqlite3.connect("database.db")
-                cursor = conn.cursor()
-                cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro (nome, sobrenome, email, senha)""")
-                cursor.execute(f"""INSERT INTO cadastro (nome, sobrenome, email, senha) VALUES (?, ?, ?, ?)""", (name_, lname_, email_, pass_))
+                cursor.execute(f"""INSERT INTO cadastro (id, nome, sobrenome, email, senha) VALUES (?, ?, ?, ?, ?)""", (id_, name_, lname_, email_, pass_))
                 conn.commit()
                 conn.close()
             except Exception as e:
                 return f"ERRO NO SQL: {e}"
         else:
             return f"/***# {request.method} ERROR CONDITION ---"
-    except:
-        return f"/***# {request.method} ERROR EXCEPTION ---"
-    return render_template("registration.html", name=name_, lname=lname_, email=email_, password=pass_)
+    except Exception as e:
+        return f"/***# {request.method} ERROR EXCEPTION: {e}---"
+    return render_template("registration.html", id=id_, name=name_, lname=lname_, email=email_, password=pass_)
 
 @app.route("/returnSQL")
 def funcao():
