@@ -44,9 +44,20 @@ def registroPage(id_=False, name_=False, lname_=False, email_=False, pass_=False
         return f"/***# {request.method} ERROR EXCEPTION: {e}---"
     return render_template("registration.html", id=id_, name=name_, lname=lname_, email=email_, password=pass_)
 
-@app.route("/returnSQL")
+@app.route("/returnSQL", methods=["GET", "POST"])
 def funcao():
-    result = {"message": "Python function executed successfully!"}
-    return jsonify(result)
+    conn = sqlite3.connect(db)
+    cursor = conn.cursor()
+
+    if (request.method == "POST"):
+        cursor.execute("""SELECT * FROM cadastro""")
+        records = cursor.fetchall()
+
+        print(records)
+        print(records[0])
+        
+        return "True"
+    else:
+        return "False"
 
 app.run(debug=True)
