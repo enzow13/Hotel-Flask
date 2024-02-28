@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, redirect, session
 from random import randint
 import sqlite3
 
@@ -7,6 +7,7 @@ db = "database.db"
 
 # Flask server
 app = Flask(__name__)
+app.secret_key = 'banananana'
 
 @app.route("/")
 def mainPage():
@@ -42,22 +43,51 @@ def registroPage(id_=False, name_=False, lname_=False, email_=False, pass_=False
             return f"/***# {request.method} ERROR CONDITION ---"
     except Exception as e:
         return f"/***# {request.method} ERROR EXCEPTION: {e}---"
-    return render_template("registration.html", id=id_, name=name_, lname=lname_, email=email_, password=pass_)
+    return redirect(url_for("mainPage"))
 
-@app.route("/returnSQL", methods=["GET", "POST"])
+@app.route("/goToCadastros")
+def goToCadastros():
+    try:
+        records = session.get('records')
+        id_user = session.get('id')
+
+        if (records is not None):
+            pass
+        else:
+            records = "USER NOT FOUND"
+            
+        if (id_user is not None):
+            pass
+        else:
+            id_user = "ID USER NOT FOUND"
+
+        return render_template("registration.html", records=records, id_user=id_user)
+    except Exception as e:
+        return e
+
+@app.route("/returnSQL")
 def funcao():
-    conn = sqlite3.connect(db)
-    cursor = conn.cursor()
-
-    if (request.method == "POST"):
-        cursor.execute("""SELECT * FROM cadastro""")
-        records = cursor.fetchall()
-
-        print(records)
-        print(records[0])
-        
-        return "True"
-    else:
-        return "False"
+    try:
+        conn = sqlite3.connect(db)
+        cursor = conn.cursor()
+        try:
+            getUser_id = request.args.get('id', default = 1, type = str)
+            if (getUser_id is not None):
+                cursor.execute("""SELECT * FROM cadastro WHERE id=?""", (getUser_id,))
+                records = cursor.fetchone()
+                if (records is not None):
+                    print(records)
+                    session['records'] = records
+                    session['id'] = getUser_id
+                    conn.close()
+                else:
+                    session['id'] = None
+            else:
+                session['records'] = None
+        except Exception as e:
+            return e
+        return redirect(url_for("goToCadastros"))
+    except Exception as e:
+        return e
 
 app.run(debug=True)

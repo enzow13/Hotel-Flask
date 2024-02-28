@@ -17,20 +17,18 @@
             <section id="section-content_form">
                 <form id="main-form" action="{{ url_for('registroPage') }}" method="post">
                     <label for="name">Nome:</label>
-                    <input class="input-form" type="text" name="name" placeholder="Digite seu nome">
+                    <input class="input-form" type="text" name="name" placeholder="Digite seu nome" required>
                     <label for="lastname">Sobrenome:</label>
-                    <input class="input-form" type="text" name="lastname" placeholder="Digite seu sobrenome">
+                    <input class="input-form" type="text" name="lastname" placeholder="Digite seu sobrenome" required>
                     <label for="email">E-mail:</label>
-                    <input class="input-form" type="email" name="email" placeholder="Digite seu e-mail">
+                    <input class="input-form" type="email" name="email" placeholder="Digite seu e-mail" required>
                     <label for="password">Senha:</label>
-                    <input class="input-form" type="password" name="password" placeholder="Digite sua senha">
+                    <input class="input-form" type="password" name="password" placeholder="Digite sua senha" required>
                     <input id="input-btn_submit" type="submit" value="REGISTRAR-SE">
+                    <a id="a-a_submit" href="{{ url_for('goToCadastros') }}">CADASTROS</a>
                 </form>
             </section>
         </div>
     </main>
 </body>
-<script>
-    let main_content_page = document.getElementById("main-content_page");
-</script>
 </html>
