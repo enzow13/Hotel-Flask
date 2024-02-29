@@ -3,28 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Cadastros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/registration_page/style.css') }}">
 </head>
 <body>
-    <p>
-        Teste [ Os valores são:
-        Nome: {{ name }}
-        Sobrenome: {{ lname }}
-        E-mail: {{ email }}
-        Senha: {{ password }} ]
-    </p>
-    <input id="input-id_btn" type="text" name="search_id" placeholder="ID Number" required>
-    <a id="a-btn" onclick="getValueSend()" href="#">TESTE</a>
-    <p>{{ records }}</p>
-    <p>{{ id_user }}</p>
+    <main id="main-content">
+        <h1 id="main-h1">Informações de usuário</h1>
+        <section id="section-content">
+            <input id="input-id_btn" type="text" placeholder="ID do Usuário" required>
+            <a id="a-btn" onclick="getValueSend()" href="#">Procurar</a>
+            <article id="article-content_info">
+                <label class="label-text_info">Id:</label>
+                <label class="label-user_info">{{ records[0] }}</label>
+                <label class="label-text_info">Nome Completo:</label>
+                <label class="label-user_info">{{ records[1] }} {{ records[2] }}</label>
+                <label class="label-text_info">E-mail:</label>
+                <label class="label-user_info">{{ records[3]}}</label>
+            </article>
+        </section>
+    </main>
+    
+    
+
 </body>
 <script>
-// app.js
-
 function getValueSend() {
-    console.log('teste')
     let inputVal = document.getElementById("input-id_btn").value;
-    document.getElementById("a-btn").href = "{{ url_for('funcao') }}?id=" + inputVal;
+    document.getElementById("a-btn").href = "{{ url_for('returnSqlUserInfo') }}?id=" + inputVal;
 }
 </script>
 </html>

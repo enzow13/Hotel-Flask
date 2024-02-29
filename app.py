@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, url_for, jsonify, redirect, session
 from random import randint
 import sqlite3
+from os import urandom
 
 # SQL server
 db = "database.db"
 
 # Flask server
 app = Flask(__name__)
-app.secret_key = 'banananana'
+app.secret_key = urandom(24).hex()
 
 @app.route("/")
 def mainPage():
@@ -45,7 +46,7 @@ def registroPage(id_=False, name_=False, lname_=False, email_=False, pass_=False
         return f"/***# {request.method} ERROR EXCEPTION: {e}---"
     return redirect(url_for("mainPage"))
 
-@app.route("/goToCadastros")
+@app.route("/Cadastros")
 def goToCadastros():
     try:
         records = session.get('records')
@@ -66,7 +67,7 @@ def goToCadastros():
         return e
 
 @app.route("/returnSQL")
-def funcao():
+def returnSqlUserInfo():
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
@@ -76,12 +77,12 @@ def funcao():
                 cursor.execute("""SELECT * FROM cadastro WHERE id=?""", (getUser_id,))
                 records = cursor.fetchone()
                 if (records is not None):
-                    print(records)
                     session['records'] = records
                     session['id'] = getUser_id
                     conn.close()
                 else:
                     session['id'] = None
+                    session['records'] = None
             else:
                 session['records'] = None
         except Exception as e:
